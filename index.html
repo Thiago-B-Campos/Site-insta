@@ -147,11 +147,19 @@
             font-weight: 300;
         }
 
-        .product-price {
+        .price-label {
+            font-size: 0.85em;
+            color: #999;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .price-range {
             font-size: 1.6em;
             font-weight: 300;
-            margin-bottom: 20px;
             letter-spacing: 1px;
+            margin-bottom: 20px;
         }
 
         .product-colors {
@@ -357,7 +365,12 @@
             if (produto.preco) {
                 precoHTML = `<p class="product-price">R$ ${produto.preco}</p>`;
             } else if (produto.precoMin && produto.precoMax) {
-                precoHTML = `<p class="product-price">A partir de R$ ${produto.precoMin} - ${produto.precoMax}</p>`;
+                precoHTML = `
+                    <div>
+                        <div class="price-label">A partir de</div>
+                        <div class="price-range">R$ ${produto.precoMin} - ${produto.precoMax}</div>
+                    </div>
+                `;
             }
             
             const card = `
