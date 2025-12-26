@@ -66,17 +66,31 @@
             transform: translateY(-5px);
         }
 
-        .product-image {
+        .product-image-container {
+            position: relative;
             width: 100%;
             height: 400px;
             background: #1a1a1a;
+            overflow: hidden;
+            border-bottom: 1px solid #222;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 5em;
-            position: relative;
-            overflow: hidden;
-            border-bottom: 1px solid #222;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .product-image.active {
+            opacity: 1;
         }
 
         .product-image img {
@@ -85,7 +99,31 @@
             object-fit: cover;
         }
 
-        .product-card:hover .product-image {
+        .image-indicators {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .indicator-dot.active {
+            background: #ffffff;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .product-card:hover .product-image-container {
             background: #222;
         }
 
@@ -112,8 +150,40 @@
         .product-price {
             font-size: 1.6em;
             font-weight: 300;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             letter-spacing: 1px;
+        }
+
+        .product-colors {
+            margin-bottom: 25px;
+        }
+
+        .colors-label {
+            font-size: 0.85em;
+            color: #999;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .colors-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .color-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-circle:hover {
+            border-color: #ffffff;
+            transform: scale(1.15);
         }
 
         .instagram-btn {
@@ -180,7 +250,7 @@
                 gap: 30px;
             }
 
-            .product-image {
+            .product-image-container {
                 height: 350px;
             }
         }
@@ -202,46 +272,54 @@
     </div>
 
     <script>
-        // ====================================
-        // 🛍️ ADICIONE SEUS PRODUTOS AQUI
-        // ====================================
         
-        // 🔗 LINK ÚNICO DO INSTAGRAM (todos os produtos vão para este link)
         const linkInstagram = "https://www.instagram.com/zerax_brasil/";
+        const delayTrocaFotos = 3000; // 3 segundos (ajuste como quiser)
         
+        // ====================================
+        //             PRODUTOS
+        // ====================================
+
         const produtos = [
             {
-                imagem: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500",
-                nome: "Camiseta Premium",
-                descricao: "Camiseta 100% algodão com design exclusivo e corte moderno. Tecido de alta qualidade.",
-                preco: "89,90"
+                // Para produtos COM VÁRIAS CORES, use um array de objetos:
+                imagens: [
+                    { url: "https://github.com/Thiago-B-Campos/Site-insta/blob/3355dd388a0bb631603f0012996d0e1a9be5647c/images/basic-branca.png", cor: "#000000" },
+                    { url: "https://github.com/Thiago-B-Campos/Site-insta/blob/3355dd388a0bb631603f0012996d0e1a9be5647c/images/basic.png", cor: "#FFFFFF" },
+                ],
+                nome: "Camiseta Básica",
+                descricao: "Camiseta 100% algodão, modelagem e tecido padrão.",
+                preco: "25,90"
             },
             {
-                imagem: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=500",
-                nome: "Calça Jeans",
-                descricao: "Jeans de alta qualidade com modelagem slim fit. Conforto e estilo em um único produto.",
-                preco: "159,90"
-            },
-            {
-                imagem: "👗",
-                nome: "Vestido Elegante",
-                descricao: "Vestido midi perfeito para ocasiões especiais. Design atemporal e sofisticado.",
+                // Para produto COM UMA COR SÓ, use apenas uma imagem:
+                imagens: [
+                    { url: "https://github.com/Thiago-B-Campos/Site-insta/blob/3355dd388a0bb631603f0012996d0e1a9be5647c/images/FREE%20Oversize%20Mockup%20BACK%20View-Recuperado.png", cor: "#000000" }
+                ],
+                nome: "Hope",
+                descricao: "Camiseta 100% algodão. Disponivél em modelagem padrão e oversized e tecido padrão, premium.",
                 preco: "199,90"
             },
             {
-                imagem: "🧥",
+                imagens: [
+                    { url: "🧥", cor: "#1E3A8A" }
+                ],
                 nome: "Jaqueta Jeans",
                 descricao: "Jaqueta jeans clássica com detalhes modernos. Peça coringa para qualquer look.",
                 preco: "179,90"
             },
             {
-                imagem: "👟",
+                imagens: [
+                    { url: "👟", cor: "#FFFFFF" }
+                ],
                 nome: "Tênis Casual",
                 descricao: "Tênis confortável para o dia a dia. Estilo e conforto em cada passo.",
                 preco: "149,90"
             },
             {
-                imagem: "🧢",
+                imagens: [
+                    { url: "🧢", cor: "#000000" }
+                ],
                 nome: "Boné Estiloso",
                 descricao: "Boné urbano com ajuste perfeito. Design único para complementar seu estilo.",
                 preco: "69,90"
@@ -254,20 +332,51 @@
         
         const container = document.getElementById('products-container');
         
-        produtos.forEach(produto => {
-            // Verifica se é URL ou emoji
-            const isURL = produto.imagem.startsWith('http');
-            const imagemHTML = isURL 
-                ? `<img src="${produto.imagem}" alt="${produto.nome}">`
-                : produto.imagem;
+        produtos.forEach((produto, produtoIndex) => {
+            // Extrai as cores únicas
+            const cores = produto.imagens.map(img => img.cor);
+            
+            // Gera HTML das imagens
+            const imagensHTML = produto.imagens.map((img, index) => {
+                const isURL = img.url.startsWith('http');
+                const conteudo = isURL 
+                    ? `<img src="${img.url}" alt="${produto.nome}">`
+                    : img.url;
+                
+                return `<div class="product-image ${index === 0 ? 'active' : ''}">${conteudo}</div>`;
+            }).join('');
+            
+            // Gera indicadores
+            const indicadoresHTML = produto.imagens.length > 1 
+                ? `<div class="image-indicators">
+                    ${produto.imagens.map((_, i) => `<div class="indicator-dot ${i === 0 ? 'active' : ''}"></div>`).join('')}
+                   </div>`
+                : '';
+            
+            // Gera as bolinhas de cores
+            let coresHTML = '';
+            if (cores.length > 0) {
+                coresHTML = `
+                    <div class="product-colors">
+                        <div class="colors-label">Cores disponíveis</div>
+                        <div class="colors-container">
+                            ${cores.map(cor => `<div class="color-circle" style="background-color: ${cor}; ${cor === '#FFFFFF' ? 'border-color: #666;' : ''}"></div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
             
             const card = `
-                <div class="product-card">
-                    <div class="product-image">${imagemHTML}</div>
+                <div class="product-card" data-product-index="${produtoIndex}">
+                    <div class="product-image-container">
+                        ${imagensHTML}
+                        ${indicadoresHTML}
+                    </div>
                     <div class="product-info">
                         <h2 class="product-name">${produto.nome}</h2>
                         <p class="product-description">${produto.descricao}</p>
                         <p class="product-price">R$ ${produto.preco}</p>
+                        ${coresHTML}
                         <a href="${linkInstagram}" target="_blank" class="instagram-btn">
                             <svg class="instagram-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
@@ -278,6 +387,31 @@
                 </div>
             `;
             container.innerHTML += card;
+        });
+
+        // Inicializa carrossel para cada produto
+        document.querySelectorAll('.product-card').forEach(card => {
+            const produtoIndex = card.dataset.productIndex;
+            const produto = produtos[produtoIndex];
+            
+            if (produto.imagens.length > 1) {
+                let currentIndex = 0;
+                const imagens = card.querySelectorAll('.product-image');
+                const indicators = card.querySelectorAll('.indicator-dot');
+                
+                setInterval(() => {
+                    // Remove active da imagem e indicador atual
+                    imagens[currentIndex].classList.remove('active');
+                    indicators[currentIndex].classList.remove('active');
+                    
+                    // Avança para próxima imagem
+                    currentIndex = (currentIndex + 1) % imagens.length;
+                    
+                    // Adiciona active na nova imagem e indicador
+                    imagens[currentIndex].classList.add('active');
+                    indicators[currentIndex].classList.add('active');
+                }, delayTrocaFotos);
+            }
         });
     </script>
 </body>
