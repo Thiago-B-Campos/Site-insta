@@ -289,7 +289,8 @@
                 ],
                 nome: "Camiseta Básica",
                 descricao: "Camiseta 100% algodão, modelagem e tecido padrão.",
-                preco: "25,90"
+                precoMin: "25,90",
+                precoMax: "50,90"
             },
             {
                 // Para produto COM UMA COR SÓ, use apenas uma imagem:
@@ -298,7 +299,8 @@
                 ],
                 nome: "Hope",
                 descricao: "Camiseta 100% algodão. Disponivél em modelagem padrão e oversized e tecido padrão, premium.",
-                preco: "199,90"
+                precoMin: "29,90",
+                precoMax: "80,90"
             },
             {
                 imagens: [
@@ -308,26 +310,10 @@
                 descricao: "Jaqueta jeans clássica com detalhes modernos. Peça coringa para qualquer look.",
                 preco: "179,90"
             },
-            {
-                imagens: [
-                    { url: "👟", cor: "#FFFFFF" }
-                ],
-                nome: "Tênis Casual",
-                descricao: "Tênis confortável para o dia a dia. Estilo e conforto em cada passo.",
-                preco: "149,90"
-            },
-            {
-                imagens: [
-                    { url: "🧢", cor: "#000000" }
-                ],
-                nome: "Boné Estiloso",
-                descricao: "Boné urbano com ajuste perfeito. Design único para complementar seu estilo.",
-                preco: "69,90"
-            }
         ];
 
         // ====================================
-        // 🚀 CÓDIGO AUTOMÁTICO (não mexer)
+        //              CÓDIGO
         // ====================================
         
         const container = document.getElementById('products-container');
@@ -366,6 +352,14 @@
                 `;
             }
             
+            // Gera o preço (único ou faixa)
+            let precoHTML = '';
+            if (produto.preco) {
+                precoHTML = `<p class="product-price">R$ ${produto.preco}</p>`;
+            } else if (produto.precoMin && produto.precoMax) {
+                precoHTML = `<p class="product-price">A partir de R$ ${produto.precoMin} - ${produto.precoMax}</p>`;
+            }
+            
             const card = `
                 <div class="product-card" data-product-index="${produtoIndex}">
                     <div class="product-image-container">
@@ -375,7 +369,7 @@
                     <div class="product-info">
                         <h2 class="product-name">${produto.nome}</h2>
                         <p class="product-description">${produto.descricao}</p>
-                        <p class="product-price">R$ ${produto.preco}</p>
+                        ${precoHTML}
                         ${coresHTML}
                         <a href="${linkInstagram}" target="_blank" class="instagram-btn">
                             <svg class="instagram-icon" viewBox="0 0 24 24" fill="currentColor">
